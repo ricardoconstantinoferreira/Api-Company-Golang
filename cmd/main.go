@@ -21,6 +21,8 @@ func main() {
 	r.HandleFunc("/delete-company-by-id/{id}", companyModel.DeleteCompanyByIdHandler).Methods("DELETE")
 
 	r.HandleFunc("/create-employee", employeeModel.CreateEmployeeHandler).Methods("POST")
+	r.HandleFunc("/get-all-employee", employeeModel.GetListEmployeeHandler).Methods("GET")
+	r.HandleFunc("/update-employee-by-id/{id}", employeeModel.UpdateEmployeeByIdHandler).Methods("PUT")
 
 	log.Fatal(http.ListenAndServe(":8081", r))
 }

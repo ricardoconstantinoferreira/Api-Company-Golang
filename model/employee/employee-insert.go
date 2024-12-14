@@ -28,7 +28,7 @@ func CreateEmployeeHandler(w http.ResponseWriter, r *http.Request) {
 
 func createEmployee(db *sql.DB, employee structs.Employee) error {
 	query := "insert into employee (id, name, document, positionjob, company_id ) values (?, ?, ?, ?, ?)"
-	_, err := db.Exec(query, 0, employee.Name, employee.Document, employee.PositionJob, employee.Company.Id)
+	_, err := db.Exec(query, 0, employee.Name, employee.Document, employee.PositionJob, employee.Company)
 
 	if err != nil {
 		return err
