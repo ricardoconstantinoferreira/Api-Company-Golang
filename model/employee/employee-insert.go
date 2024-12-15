@@ -20,10 +20,11 @@ func CreateEmployeeHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, "Failed to create employee", http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintln(w, "User created successfully!!!")
+	fmt.Fprintln(w, "Employee created successfully!!!")
 }
 
 func createEmployee(db *sql.DB, employee structs.Employee) error {

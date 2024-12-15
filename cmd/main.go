@@ -22,7 +22,9 @@ func main() {
 
 	r.HandleFunc("/create-employee", employeeModel.CreateEmployeeHandler).Methods("POST")
 	r.HandleFunc("/get-all-employee", employeeModel.GetListEmployeeHandler).Methods("GET")
+	r.HandleFunc("/get-employee-by-id/{id}", employeeModel.GetEmployeeAndCompanyByEmployeeId).Methods("GET")
 	r.HandleFunc("/update-employee-by-id/{id}", employeeModel.UpdateEmployeeByIdHandler).Methods("PUT")
+	r.HandleFunc("/delete-employee-by-id/{id}", employeeModel.DeleteEmployeeByIdHandler).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8081", r))
 }

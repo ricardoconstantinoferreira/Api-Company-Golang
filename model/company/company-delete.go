@@ -3,7 +3,6 @@ package company
 import (
 	"company/db"
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -15,7 +14,7 @@ func DeleteCompanyByIdHandler(w http.ResponseWriter, r *http.Request) {
 	db := db.Validate(w)
 	defer db.Close()
 
-	vars := mux.Vars(r);
+	vars := mux.Vars(r)
 	id := vars["id"]
 
 	companyId, err := strconv.Atoi(id)
@@ -33,9 +32,6 @@ func DeleteCompanyByIdHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintln(w, "Company deleted successfully")
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(company)
 }
 
 func deleteCompanyById(db *sql.DB, id int) error {
