@@ -1,7 +1,7 @@
 package employee
 
 import (
-	"company/db"
+	companyDB "company/db"
 	"company/structs"
 	"database/sql"
 	"encoding/json"
@@ -13,7 +13,7 @@ import (
 )
 
 func UpdateEmployeeByIdHandler(w http.ResponseWriter, r *http.Request) {
-	db := db.Validate(w)
+	db := companyDB.Validate(w)
 	defer db.Close()
 
 	vars := mux.Vars(r)
@@ -42,8 +42,15 @@ func UpdateEmployeeByIdHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateEmployeeById(db *sql.DB, employeeId int, employee structs.Employee) error {
-	query := "update employee set name = ?, document = ?, positionjob = ?, company_id = ? where id = ?"
-	_, err := db.Exec(query, employee.Name, employee.Document, employee.PositionJob, employee.Company, employeeId)
+
+	password, error := companyDB.HashPassword(employee.Password)
+
+	if error != nil {
+		panic("Error hash password")
+	}
+
+	query := "update employee set name = ?, document = ?, positionjob = ?, company_id = ?, password = ? where id = ?"
+	_, err := db.Exec(query, employee.Name, employee.Document, employee.PositionJob, employee.Company, password, employeeId)
 
 	if err != nil {
 		return err

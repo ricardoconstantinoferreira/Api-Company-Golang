@@ -1,7 +1,7 @@
 package employee
 
 import (
-	"company/db"
+	companyDB "company/db"
 	"company/structs"
 	"database/sql"
 	"encoding/json"
@@ -10,11 +10,16 @@ import (
 )
 
 func CreateEmployeeHandler(w http.ResponseWriter, r *http.Request) {
-	db := db.Validate(w)
+	db := companyDB.Validate(w)
 	defer db.Close()
 
 	var employee structs.Employee
 	json.NewDecoder(r.Body).Decode(&employee)
+
+	if employee.Password != employee.ConfirmPassword {
+		http.Error(w, "Please, passwords must be the same", http.StatusInternalServerError)
+		return
+	}
 
 	err := createEmployee(db, employee)
 
@@ -28,8 +33,15 @@ func CreateEmployeeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func createEmployee(db *sql.DB, employee structs.Employee) error {
-	query := "insert into employee (id, name, document, positionjob, company_id ) values (?, ?, ?, ?, ?)"
-	_, err := db.Exec(query, 0, employee.Name, employee.Document, employee.PositionJob, employee.Company)
+
+	password, error := companyDB.HashPassword(employee.Password)
+
+	if error != nil {
+		panic("Error hash password")
+	}
+
+	query := "insert into employee (id, name, document, positionjob, company_id, password ) values (?, ?, ?, ?, ?, ?)"
+	_, err := db.Exec(query, 0, employee.Name, employee.Document, employee.PositionJob, employee.Company, password)
 
 	if err != nil {
 		return err

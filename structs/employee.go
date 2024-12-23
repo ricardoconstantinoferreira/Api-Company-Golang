@@ -7,4 +7,6 @@ type Employee struct {
 	PositionJob              string `json:"positionjob,omitempty"`
 	Company                  int    `json:"company_id,omitempty"`
 	CompanyCorporativeReason string `json:"corporatereason,omitempty"`
+	Password                 string `json:"password,omitempty"`
+	ConfirmPassword          string `json:"confirm_password,omitempty"`
 }
