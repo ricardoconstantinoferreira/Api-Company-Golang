@@ -40,8 +40,8 @@ func createEmployee(db *sql.DB, employee structs.Employee) error {
 		panic("Error hash password")
 	}
 
-	query := "insert into employee (id, name, document, positionjob, company_id, password ) values (?, ?, ?, ?, ?, ?)"
-	_, err := db.Exec(query, 0, employee.Name, employee.Document, employee.PositionJob, employee.Company, password)
+	query := "insert into employee (id, name, document, positionjob, company_id, username, password ) values (?, ?, ?, ?, ?, ?, ?)"
+	_, err := db.Exec(query, 0, employee.Name, employee.Document, employee.PositionJob, employee.Company, employee.Username, password)
 
 	if err != nil {
 		return err

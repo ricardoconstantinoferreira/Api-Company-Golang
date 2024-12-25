@@ -49,8 +49,8 @@ func updateEmployeeById(db *sql.DB, employeeId int, employee structs.Employee) e
 		panic("Error hash password")
 	}
 
-	query := "update employee set name = ?, document = ?, positionjob = ?, company_id = ?, password = ? where id = ?"
-	_, err := db.Exec(query, employee.Name, employee.Document, employee.PositionJob, employee.Company, password, employeeId)
+	query := "update employee set name = ?, document = ?, positionjob = ?, company_id = ?, username = ?, password = ? where id = ?"
+	_, err := db.Exec(query, employee.Name, employee.Document, employee.PositionJob, employee.Company, employee.Username, password, employeeId)
 
 	if err != nil {
 		return err

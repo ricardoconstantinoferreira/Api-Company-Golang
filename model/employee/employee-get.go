@@ -44,15 +44,36 @@ func GetEmployeeAndCompanyByEmployeeId(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(employee)
 }
 
+func GetEmployeeByName(username string, w http.ResponseWriter) (*structs.Employee, error) {
+	db := db.Validate(w)
+	defer db.Close()
+
+	return getEmployeeByName(db, username)
+}
+
+func getEmployeeByName(db *sql.DB, username string) (*structs.Employee, error) {
+	query := "select id, name, username, password from employee where username = ?"
+	result := db.QueryRow(query, username)
+
+	employee := &structs.Employee{}
+	err := result.Scan(&employee.Id, &employee.Name, &employee.Username, &employee.Password)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return employee, err
+}
+
 func getEmployeeAndCompanyByEmployeeId(db *sql.DB, employeeId int) (*structs.Employee, error) {
-	query := "select e.id, e.name, e.document, e.positionjob, c.corporatereason from employee e " +
+	query := "select e.id, e.name, e.document, e.positionjob, e.username, c.corporatereason from employee e " +
 		"inner join company c on c.id = e.company_id " +
 		"where e.id = ?"
 
 	result := db.QueryRow(query, employeeId)
 
 	employee := &structs.Employee{}
-	err := result.Scan(&employee.Id, &employee.Name, &employee.Document, &employee.PositionJob, &employee.CompanyCorporativeReason)
+	err := result.Scan(&employee.Id, &employee.Name, &employee.Document, &employee.PositionJob, &employee.Username, &employee.CompanyCorporativeReason)
 
 	if err != nil {
 		return nil, err
@@ -62,7 +83,7 @@ func getEmployeeAndCompanyByEmployeeId(db *sql.DB, employeeId int) (*structs.Emp
 }
 
 func getListEmployee(db *sql.DB) (*map[int]structs.Employee, error) {
-	query := "select e.id, e.name, e.document, e.positionjob, c.corporatereason from employee e " +
+	query := "select e.id, e.name, e.document, e.positionjob, e.username, c.corporatereason from employee e " +
 		"inner join company c on c.id = e.company_id"
 
 	results, err := db.Query(query)
@@ -77,7 +98,7 @@ func getListEmployee(db *sql.DB) (*map[int]structs.Employee, error) {
 
 	for results.Next() {
 
-		err := results.Scan(&employee.Id, &employee.Name, &employee.Document, &employee.PositionJob, &employee.CompanyCorporativeReason)
+		err := results.Scan(&employee.Id, &employee.Name, &employee.Document, &employee.PositionJob, &employee.Username, &employee.CompanyCorporativeReason)
 
 		if err != nil {
 			panic(err.Error())

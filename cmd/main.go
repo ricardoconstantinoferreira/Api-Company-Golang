@@ -1,6 +1,8 @@
 package main
 
 import (
+	"company/auth"
+	loginHandler "company/handler"
 	companyModel "company/model/company"
 	employeeModel "company/model/employee"
 	"log"
@@ -14,17 +16,22 @@ func main() {
 
 	r := mux.NewRouter()
 
+	r.HandleFunc("/login", loginHandler.LoginHandler).Methods("POST")
+
+	privateRouter := r.PathPrefix("/").Subrouter()
+	privateRouter.Use(auth.AuthMiddleware)
+
 	r.HandleFunc("/create-company", companyModel.CreateCompanyHandler).Methods("POST")
-	r.HandleFunc("/get-all-company", companyModel.GetListCompanyHandler).Methods("GET")
-	r.HandleFunc("/get-company-by-id/{id}", companyModel.GetListCompanyByIdHandler).Methods("GET")
-	r.HandleFunc("/update-company-by-id/{id}", companyModel.UpdateCompanyByIdHandler).Methods("PUT")
-	r.HandleFunc("/delete-company-by-id/{id}", companyModel.DeleteCompanyByIdHandler).Methods("DELETE")
+	privateRouter.HandleFunc("/get-all-company", companyModel.GetListCompanyHandler).Methods("GET")
+	privateRouter.HandleFunc("/get-company-by-id/{id}", companyModel.GetListCompanyByIdHandler).Methods("GET")
+	privateRouter.HandleFunc("/update-company-by-id/{id}", companyModel.UpdateCompanyByIdHandler).Methods("PUT")
+	privateRouter.HandleFunc("/delete-company-by-id/{id}", companyModel.DeleteCompanyByIdHandler).Methods("DELETE")
 
 	r.HandleFunc("/create-employee", employeeModel.CreateEmployeeHandler).Methods("POST")
-	r.HandleFunc("/get-all-employee", employeeModel.GetListEmployeeHandler).Methods("GET")
-	r.HandleFunc("/get-employee-by-id/{id}", employeeModel.GetEmployeeAndCompanyByEmployeeId).Methods("GET")
-	r.HandleFunc("/update-employee-by-id/{id}", employeeModel.UpdateEmployeeByIdHandler).Methods("PUT")
-	r.HandleFunc("/delete-employee-by-id/{id}", employeeModel.DeleteEmployeeByIdHandler).Methods("DELETE")
+	privateRouter.HandleFunc("/get-all-employee", employeeModel.GetListEmployeeHandler).Methods("GET")
+	privateRouter.HandleFunc("/get-employee-by-id/{id}", employeeModel.GetEmployeeAndCompanyByEmployeeId).Methods("GET")
+	privateRouter.HandleFunc("/update-employee-by-id/{id}", employeeModel.UpdateEmployeeByIdHandler).Methods("PUT")
+	privateRouter.HandleFunc("/delete-employee-by-id/{id}", employeeModel.DeleteEmployeeByIdHandler).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8081", r))
 }
