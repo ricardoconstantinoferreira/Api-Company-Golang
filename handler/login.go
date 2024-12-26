@@ -23,7 +23,7 @@ func createToken(userID, username string) (string, error) {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	var employeeSt structs.LoginEmployee
+	var employeeSt structs.Employee
 
 	json.NewDecoder(r.Body).Decode(&employeeSt)
 

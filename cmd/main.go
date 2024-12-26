@@ -5,6 +5,7 @@ import (
 	loginHandler "company/handler"
 	companyModel "company/model/company"
 	employeeModel "company/model/employee"
+	userModel "company/model/user"
 	"log"
 	"net/http"
 
@@ -32,6 +33,12 @@ func main() {
 	privateRouter.HandleFunc("/get-employee-by-id/{id}", employeeModel.GetEmployeeAndCompanyByEmployeeId).Methods("GET")
 	privateRouter.HandleFunc("/update-employee-by-id/{id}", employeeModel.UpdateEmployeeByIdHandler).Methods("PUT")
 	privateRouter.HandleFunc("/delete-employee-by-id/{id}", employeeModel.DeleteEmployeeByIdHandler).Methods("DELETE")
+
+	r.HandleFunc("/create-user", userModel.CreateUserHandler).Methods("POST")
+	r.HandleFunc("/get-all-user", userModel.GetListUserHandler).Methods("GET")
+	r.HandleFunc("/get-user-by-id/{id}", userModel.GetUserByIdHandler).Methods("GET")
+	r.HandleFunc("/update-user-by-id/{id}", userModel.UpdateUserByIdHandler).Methods("PUT")
+	r.HandleFunc("/delete-user-by-id/{id}", userModel.DeleteUserByIdHandler).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8081", r))
 }
