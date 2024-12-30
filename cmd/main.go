@@ -5,8 +5,8 @@ import (
 	loginHandler "company/handler"
 	companyModel "company/model/company"
 	employeeModel "company/model/employee"
+	productsModel "company/model/products"
 	userModel "company/model/user"
-	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -16,11 +16,16 @@ import (
 func main() {
 
 	r := mux.NewRouter()
+	u := mux.NewRouter()
 
-	r.HandleFunc("/login", loginHandler.LoginHandler).Methods("POST")
+	r.HandleFunc("/employee/login", loginHandler.EmployeeLoginHandler).Methods("POST")
+	u.HandleFunc("/user/login", loginHandler.UserLoginHandler).Methods("POST")
 
 	privateRouter := r.PathPrefix("/").Subrouter()
 	privateRouter.Use(auth.AuthMiddleware)
+
+	privateUserRouter := u.PathPrefix("/").Subrouter()
+	privateUserRouter.Use(auth.AuthMiddleware)
 
 	r.HandleFunc("/create-company", companyModel.CreateCompanyHandler).Methods("POST")
 	privateRouter.HandleFunc("/get-all-company", companyModel.GetListCompanyHandler).Methods("GET")
@@ -40,5 +45,11 @@ func main() {
 	r.HandleFunc("/update-user-by-id/{id}", userModel.UpdateUserByIdHandler).Methods("PUT")
 	r.HandleFunc("/delete-user-by-id/{id}", userModel.DeleteUserByIdHandler).Methods("DELETE")
 
-	log.Fatal(http.ListenAndServe(":8081", r))
+	privateUserRouter.HandleFunc("/create-products", productsModel.CreateProductsHandler).Methods("POST")
+
+	go func() {
+		http.ListenAndServe(":8082", u)
+	}()
+
+	http.ListenAndServe(":8081", r)
 }

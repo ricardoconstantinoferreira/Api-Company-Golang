@@ -44,6 +44,27 @@ func GetUserByIdHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)
 }
 
+func GetUserByName(username string, w http.ResponseWriter) (*structs.User, error) {
+	db := db.Validate(w)
+	defer db.Close()
+
+	return getUserByName(db, username)
+}
+
+func getUserByName(db *sql.DB, username string) (*structs.User, error) {
+	query := "select id, name, username, password from user where username = ?"
+	result := db.QueryRow(query, username)
+
+	user := &structs.User{}
+	err := result.Scan(&user.Id, &user.Name, &user.Username, &user.Password)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, err
+}
+
 func getUserById(db *sql.DB, id int) (*structs.User, error) {
 	query := "select id, name, username, password from user where id = ?"
 
