@@ -23,6 +23,7 @@ func UpdateCompanyByIdHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, "Impossible change to int", http.StatusInternalServerError)
+		return
 	}
 
 	var company structs.Company
@@ -30,6 +31,7 @@ func UpdateCompanyByIdHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, "Impossible decode", http.StatusInternalServerError)
+		return
 	}
 
 	error := updateCompanyById(db, companyId, company)
