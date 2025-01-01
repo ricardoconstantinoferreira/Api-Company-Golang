@@ -46,10 +46,11 @@ func main() {
 	r.HandleFunc("/delete-user-by-id/{id}", userModel.DeleteUserByIdHandler).Methods("DELETE")
 
 	privateUserRouter.HandleFunc("/create-products", productsModel.CreateProductsHandler).Methods("POST")
-	privateUserRouter.HandleFunc("/get-all-products", productsModel.GetListProductsHandler).Methods("GET")
-	privateUserRouter.HandleFunc("/get-products-by-id/{id}", productsModel.GetListProductsByIdHandler).Methods("GET")
 	privateUserRouter.HandleFunc("/update-products-by-id/{id}", productsModel.UpdateProductByIdHandler).Methods("PUT")
 	privateUserRouter.HandleFunc("/delete-products-by-id/{id}", productsModel.DeleteProductByIdHandler).Methods("DELETE")
+
+	u.HandleFunc("/get-all-products", productsModel.GetListProductsHandler).Methods("GET")
+	u.HandleFunc("/get-products-by-id/{id}", productsModel.GetListProductsByIdHandler).Methods("GET")
 
 	go func() {
 		http.ListenAndServe(":8082", u)
