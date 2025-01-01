@@ -6,6 +6,7 @@ import (
 	companyModel "company/model/company"
 	employeeModel "company/model/employee"
 	productsModel "company/model/products"
+	salesModel "company/model/sales"
 	userModel "company/model/user"
 	"net/http"
 
@@ -38,6 +39,8 @@ func main() {
 	privateRouter.HandleFunc("/get-employee-by-id/{id}", employeeModel.GetEmployeeAndCompanyByEmployeeId).Methods("GET")
 	privateRouter.HandleFunc("/update-employee-by-id/{id}", employeeModel.UpdateEmployeeByIdHandler).Methods("PUT")
 	privateRouter.HandleFunc("/delete-employee-by-id/{id}", employeeModel.DeleteEmployeeByIdHandler).Methods("DELETE")
+
+	privateRouter.HandleFunc("/create-sales", salesModel.CreateSalesHandler).Methods("POST")
 
 	r.HandleFunc("/create-user", userModel.CreateUserHandler).Methods("POST")
 	r.HandleFunc("/get-all-user", userModel.GetListUserHandler).Methods("GET")
