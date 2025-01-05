@@ -43,8 +43,10 @@ func createSalesItems(db *sql.DB, salesId int64, salesItems ...structs.SalesItem
 	contError := 0
 
 	for i := 0; i < len(salesItems); i++ {
-		query := "insert into sales_items (id, product_id, sales_id, price_item) values (?, ?, ?, ?)"
-		_, err := db.Exec(query, 0, salesItems[i].ProductId, salesId, salesItems[i].PriceItem)
+		var totalItem int = int(salesItems[i].PriceItem * float64(salesItems[i].Qtde))
+
+		query := "insert into sales_items (id, product_id, sales_id, price_item, qtde, total_item) values (?, ?, ?, ?, ?, ?)"
+		_, err := db.Exec(query, 0, salesItems[i].ProductId, salesId, salesItems[i].PriceItem, salesItems[i].Qtde, totalItem)
 
 		if err != nil {
 			contError++

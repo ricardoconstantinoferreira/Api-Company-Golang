@@ -10,4 +10,6 @@ type Sales struct {
 type SalesItems struct {
 	ProductId int     `json:"product_id,omitempty"`
 	PriceItem float64 `json:"price_item,omitempty"`
+	Qtde      int     `json:"qtde,omitempty"`
+	TotalItem float64 `json:"total_item,omitempty"`
 }
