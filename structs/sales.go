@@ -13,3 +13,12 @@ type SalesItems struct {
 	Qtde      int     `json:"qtde,omitempty"`
 	TotalItem float64 `json:"total_item,omitempty"`
 }
+
+type ReportAll struct {
+	Id          int     `json:"id,omitempty"`
+	Employee    string  `json:"name,omitempty"`
+	GrandTotal  float64 `json:"grand_total,omitempty"`
+	Description string  `json:"description,omitempty"`
+	PriceItem   float64 `json:"price_item,omitempty"`
+	TotalItem   float64 `json:"total_item,omitempty"`
+}

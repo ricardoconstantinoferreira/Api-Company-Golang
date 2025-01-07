@@ -55,6 +55,10 @@ func main() {
 	u.HandleFunc("/get-all-products", productsModel.GetListProductsHandler).Methods("GET")
 	u.HandleFunc("/get-products-by-id/{id}", productsModel.GetListProductsByIdHandler).Methods("GET")
 
+	u.HandleFunc("/get-all-sales", salesModel.GetAllSales).Methods("GET")
+	u.HandleFunc("/get-sales-details-by-id/{id}", salesModel.GetSalesDetailsById).Methods("GET")
+	u.HandleFunc("/get-sales-by-id/{id}", salesModel.GetSalesById).Methods("GET")
+
 	go func() {
 		http.ListenAndServe(":8082", u)
 	}()
