@@ -7,6 +7,7 @@ import (
 	employeeModel "company/model/employee"
 	productsModel "company/model/products"
 	salesModel "company/model/sales"
+	stockModel "company/model/stock"
 	userModel "company/model/user"
 	"net/http"
 
@@ -58,6 +59,10 @@ func main() {
 	u.HandleFunc("/get-all-sales", salesModel.GetAllSales).Methods("GET")
 	u.HandleFunc("/get-sales-details-by-id/{id}", salesModel.GetSalesDetailsById).Methods("GET")
 	u.HandleFunc("/get-sales-by-id/{id}", salesModel.GetSalesById).Methods("GET")
+
+	u.HandleFunc("/create-stock", stockModel.CreateStockHandler).Methods("POST")
+	u.HandleFunc("/get-all-stock", stockModel.GetListStockHandler).Methods("GET")
+	u.HandleFunc("/get-stock-by-id/{id}", stockModel.GetListStockByIdHandler).Methods("GET")
 
 	go func() {
 		http.ListenAndServe(":8082", u)
