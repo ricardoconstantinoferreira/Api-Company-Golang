@@ -63,6 +63,8 @@ func main() {
 	u.HandleFunc("/create-stock", stockModel.CreateStockHandler).Methods("POST")
 	u.HandleFunc("/get-all-stock", stockModel.GetListStockHandler).Methods("GET")
 	u.HandleFunc("/get-stock-by-id/{id}", stockModel.GetListStockByIdHandler).Methods("GET")
+	u.HandleFunc("/delete-stock-by-id/{id}", stockModel.DeleteStockByIdHandler).Methods("DELETE")
+	u.HandleFunc("/update-stock-by-id/{id}", stockModel.UpdateStockByIdHandler).Methods("PUT")
 
 	go func() {
 		http.ListenAndServe(":8082", u)
