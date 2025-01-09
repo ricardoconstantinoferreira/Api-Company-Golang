@@ -56,15 +56,15 @@ func main() {
 	u.HandleFunc("/get-all-products", productsModel.GetListProductsHandler).Methods("GET")
 	u.HandleFunc("/get-products-by-id/{id}", productsModel.GetListProductsByIdHandler).Methods("GET")
 
-	u.HandleFunc("/get-all-sales", salesModel.GetAllSales).Methods("GET")
-	u.HandleFunc("/get-sales-details-by-id/{id}", salesModel.GetSalesDetailsById).Methods("GET")
-	u.HandleFunc("/get-sales-by-id/{id}", salesModel.GetSalesById).Methods("GET")
+	privateUserRouter.HandleFunc("/get-all-sales", salesModel.GetAllSales).Methods("GET")
+	privateRouter.HandleFunc("/get-sales-details-by-id/{id}", salesModel.GetSalesDetailsById).Methods("GET")
+	privateRouter.HandleFunc("/get-sales-by-id/{id}", salesModel.GetSalesById).Methods("GET")
 
-	u.HandleFunc("/create-stock", stockModel.CreateStockHandler).Methods("POST")
-	u.HandleFunc("/get-all-stock", stockModel.GetListStockHandler).Methods("GET")
-	u.HandleFunc("/get-stock-by-id/{id}", stockModel.GetListStockByIdHandler).Methods("GET")
-	u.HandleFunc("/delete-stock-by-id/{id}", stockModel.DeleteStockByIdHandler).Methods("DELETE")
-	u.HandleFunc("/update-stock-by-id/{id}", stockModel.UpdateStockByIdHandler).Methods("PUT")
+	privateUserRouter.HandleFunc("/create-stock", stockModel.CreateStockHandler).Methods("POST")
+	privateUserRouter.HandleFunc("/get-all-stock", stockModel.GetListStockHandler).Methods("GET")
+	privateUserRouter.HandleFunc("/get-stock-by-id/{id}", stockModel.GetListStockByIdHandler).Methods("GET")
+	privateUserRouter.HandleFunc("/delete-stock-by-id/{id}", stockModel.DeleteStockByIdHandler).Methods("DELETE")
+	privateUserRouter.HandleFunc("/update-stock-by-id/{id}", stockModel.UpdateStockByIdHandler).Methods("PUT")
 
 	go func() {
 		http.ListenAndServe(":8082", u)
