@@ -2,6 +2,7 @@ package sales
 
 import (
 	companyDB "company/db"
+	productsModel "company/model/products"
 	"company/structs"
 	"database/sql"
 	"fmt"
@@ -25,12 +26,21 @@ func CreateSalesHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, "Failed create sales", http.StatusInternalServerError)
+		return
+	}
+
+	validErrors := validQtdeItems(db, sales.SalesItems...)
+
+	if validErrors > 0 {
+		http.Error(w, "There is item or more that dont have quantities", http.StatusInternalServerError)
+		return
 	}
 
 	errorItems := createSalesItems(db, lastInsertId, sales.SalesItems...)
 
 	if errorItems > 0 {
 		http.Error(w, "Failed create sales items", http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
@@ -50,6 +60,10 @@ func createSalesItems(db *sql.DB, salesId int64, salesItems ...structs.SalesItem
 
 		if err != nil {
 			contError++
+		} else {
+			products, _ := productsModel.GetProductById(db, salesItems[i].ProductId)
+			qtde := products.Qtde - salesItems[i].Qtde
+			productsModel.UpdateQtdeProductsById(db, salesItems[i].ProductId, qtde)
 		}
 	}
 
@@ -66,4 +80,19 @@ func createSales(db *sql.DB, sales structs.Sales) (int64, error) {
 	}
 
 	return id, nil
+}
+
+func validQtdeItems(db *sql.DB, salesItems ...structs.SalesItems) int {
+
+	contError := 0
+
+	for i := 0; i < len(salesItems); i++ {
+		products, _ := productsModel.GetProductById(db, salesItems[i].ProductId)
+
+		if products.Qtde < salesItems[i].Qtde {
+			contError++
+		}
+	}
+
+	return contError
 }

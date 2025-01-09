@@ -28,8 +28,8 @@ func CreateProductsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func createProducts(db *sql.DB, products structs.Products) error {
-	query := "insert into products (id, description, sku, price, user_id) values (?, ?, ?, ?, ?)"
-	_, err := db.Exec(query, 0, products.Description, products.Sku, products.Price, products.User)
+	query := "insert into products (id, description, sku, price, user_id, stock_id, qtde) values (?, ?, ?, ?, ?, ?, ?)"
+	_, err := db.Exec(query, 0, products.Description, products.Sku, products.Price, products.User, products.Stock, products.Qtde)
 
 	if err != nil {
 		return err

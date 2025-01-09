@@ -26,7 +26,8 @@ func GetListProductsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getListProducts(db *sql.DB) (*map[int]structs.Products, error) {
-	query := "select id, description, sku, price from products"
+	query := "select p.id, p.description, p.sku, p.price, s.name, p.qtde from products p " +
+		"inner join stock s on s.id = p.stock_id"
 
 	result, err := db.Query(query)
 
@@ -39,7 +40,7 @@ func getListProducts(db *sql.DB) (*map[int]structs.Products, error) {
 	cont := 0
 
 	for result.Next() {
-		err := result.Scan(&products.Id, &products.Description, &products.Sku, &products.Price)
+		err := result.Scan(&products.Id, &products.Description, &products.Sku, &products.Price, &products.StockName, &products.Qtde)
 
 		if err != nil {
 			panic(err.Error())
@@ -60,7 +61,7 @@ func GetListProductsByIdHandler(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 
 	productId, err := strconv.Atoi(id)
-	product, err := getProductById(db, productId)
+	product, err := GetProductById(db, productId)
 
 	if err != nil {
 		http.Error(w, "Product not found", http.StatusNotFound)
@@ -70,13 +71,15 @@ func GetListProductsByIdHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(product)
 }
 
-func getProductById(db *sql.DB, productId int) (*structs.Products, error) {
-	query := "select id, description, sku, price from products where id = ?"
+func GetProductById(db *sql.DB, productId int) (*structs.Products, error) {
+	query := "select p.id, p.description, p.sku, p.price, s.name, p.qtde from products p " +
+		"inner join stock s on s.id = p.stock_id " +
+		"where p.id = ?"
 	result := db.QueryRow(query, productId)
 
 	product := &structs.Products{}
 
-	err := result.Scan(&product.Id, &product.Description, &product.Sku, &product.Price)
+	err := result.Scan(&product.Id, &product.Description, &product.Sku, &product.Price, &product.StockName, &product.Qtde)
 
 	if err != nil {
 		return nil, err
